@@ -29,12 +29,12 @@
             cursor: pointer;
             text-decoration: none;
         }
-        /* Left Side - Akash (Royal Blue Theme) */
+        /* Left Side - Akash */
         .akash {
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #fff;
         }
-        /* Right Side - Mehar (Elegant Rose Gold/Pink Theme) */
+        /* Right Side - Mehar */
         .mehar {
             background: linear-gradient(135deg, #2c3e50, #fd746c);
             color: #fff;
@@ -108,24 +108,43 @@
 </head>
 <body>
 
-    <a href="akash.html" class="split akash">
+    <div class="split akash" onclick="checkPassword('akash')">
         <div class="overlay"></div>
         <div class="content">
             <h1>Akash</h1>
             <p>Welcome to my space</p>
             <div class="btn">Explore Me</div>
         </div>
-    </a>
+    </div>
 
-    <a href="mehar.html" class="split mehar">
+    <div class="split mehar" onclick="checkPassword('mehar')">
         <div class="overlay"></div>
         <div class="content">
             <h1>Mehar</h1>
             <p>Welcome to my world</p>
             <div class="btn">Explore Me</div>
         </div>
-    </a>
-    
+    </div>
+
+    <script>
+        function checkPassword(section) {
+            if (section === 'akash') {
+                var password = prompt("Enter Password to open Akash's space:");
+                if (password === "201304") {
+                    window.location.href = "akash.html";
+                } else if (password !== null) {
+                    alert("Galat Password hai bhai! ❌");
+                }
+            } else if (section === 'mehar') {
+                var password = prompt("Enter Password to open Mehar's world:");
+                if (password === "201304") {
+                    window.location.href = "mehar.html";
+                } else if (password !== null) {
+                    alert("Wrong Password! ❌");
+                }
+            }
+        }
+    </script>
 
 </body>
 </html>
