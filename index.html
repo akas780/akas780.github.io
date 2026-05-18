@@ -43,8 +43,8 @@
         function checkPassword(section) {
             var password = prompt("Enter Secret Password:");
             if (password !== null) {
+                // Real password '201304' ko Base64 me check kar raha hai taaki inspect me na dikhe
                 if (btoa(password) === "MjAxMzA0") {
-                    sessionStorage.setItem("siteAuth", "passed");
                     if (section === 'akash') window.location.href = "akash.html";
                     if (section === 'mehar') window.location.href = "mehar.html";
                 } else {
