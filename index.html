@@ -1,44 +1,425 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CRITICAL SYSTEM FAILURE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akash - Portfolio</title>
     <style>
-        body, html {
-            margin: 0; padding: 0; overflow: hidden;
-            background: #000;
-            color: #ff0000;
-            font-family: 'Creepster', Arial, sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0d0d11;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            color: #ffffff;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Profile Section */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .heading-akash {
+            font-size: 8rem;
+            font-weight: 900;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ff0055, #00e5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: pulse 3s infinite alternate;
+        }
+
+        .profile-pic {
+            width: 320px;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 4px solid #00e5ff;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        }
+
+        /* Realistic Vehicle Overlay System */
+        .vehicle-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-            touch-action: none;
-            user-select: none;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
         }
-        .screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; z-index: 99999;
-            animation: flash 0.3s infinite alternate;
+
+        .car {
+            position: absolute;
+            bottom: 10%;
+            left: -150%;
+            width: 85vw; /* Pure screen ko cover karne ke liye bada size */
+            height: auto;
+            max-width: 1200px;
+            filter: drop-shadow(0 20px 15px rgba(0,0,0,0.7));
+            transform-origin: center bottom;
         }
-        @keyframes flash {
-            from { background: #110000; }
-            to { background: #330000; }
+
+        /* Drift Animations */
+        @keyframes driftRightToLeft {
+            0% {
+                left: 150%;
+                transform: scale(0.9) rotate(0deg);
+            }
+            30% {
+                left: 20%;
+                transform: scale(1.1) rotate(-8deg); /* Aggressive Drift Entry */
+            }
+            50% {
+                left: 10%;
+                transform: scale(1.15) rotate(12deg); /* Counter-steer Break slide */
+            }
+            70% {
+                left: -20%;
+                transform: scale(1.1) rotate(-5deg);
+            }
+            100% {
+                left: -150%;
+                transform: scale(0.9) rotate(0deg);
+            }
         }
-        .title {
-            font-size: 2.8em; margin: 10px; text-shadow: 0 0 20px red;
-            animation: shake 0.5s infinite;
+
+        @keyframes driftLeftToRight {
+            0% {
+                left: -150%;
+                transform: scale(0.9) rotate(0deg) scaleX(-1);
+            }
+            30% {
+                left: 10%;
+                transform: scale(1.1) rotate(8deg) scaleX(-1);
+            }
+            50% {
+                left: 20%;
+                transform: scale(1.15) rotate(-12deg) scaleX(-1);
+            }
+            70% {
+                left: 40%;
+                transform: scale(1.1) rotate(5deg) scaleX(-1);
+            }
+            100% {
+                left: 150%;
+                transform: scale(0.9) rotate(0deg) scaleX(-1);
+            }
         }
-        .message {
-            font-size: 1.4em; max-width: 85%; line-height: 1.5;
-            text-shadow: 0 0 10px red;
+
+        /* AN College Section */
+        .college-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(13, 13, 17, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .demon {
-            font-size: 4em; margin: 20px; animation: shake 0.4s infinite;
+
+        .college-section.reveal {
+            opacity: 1;
+            visibility: visible;
         }
-        button {
-            margin-top: 30px; padding: 15px 40px; font-size: 1.2em;
-            background: #000; color: #ff0000; border: 3px solid #ff0000;
-            border-radius: 0; cursor: pointer;
+
+        .college-card {
+            width: 85%;
+            max-width: 900px;
+            background: #16161f;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            transform: translateY(50px);
+            transition: transform 1s ease;
+        }
+
+        .college-section.reveal .college-card {
+            transform: translateY(0);
+        }
+
+        .college-img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .college-info {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .college-info h2 {
+            font-size: 3rem;
+            color: #00e5ff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .college-info p {
+            font-size: 1.5rem;
+            color: #a0a0ab;
+            font-weight: 500;
+        }
+
+        /* Flight Section */
+        .flight-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #09090d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1001;
+        }
+
+        .flight-section.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .jet-plane {
+            position: absolute;
+            width: 500px;
+            bottom: -50%;
+            left: -50%;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+
+        @keyframes jetTakeoff {
+            0% {
+                bottom: -50%;
+                left: -50%;
+                transform: scale(0.5) rotate(45deg);
+            }
+            40% {
+                bottom: 30%;
+                left: 30%;
+                transform: scale(1.2) rotate(40deg);
+            }
+            100% {
+                bottom: 150%;
+                left: 150%;
+                transform: scale(1.8) rotate(35deg);
+            }
+        }
+
+        /* Steam/Smoke Trail Effect */
+        .steam-trail {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: rgba(240, 240, 250, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 25px 15px rgba(240, 240, 245, 0.6);
+            animation: steamExpand 2.5s forwards ease-out;
+            z-index: 5;
+        }
+
+        @keyframes steamExpand {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(12);
+                opacity: 0;
+                filter: blur(10px);
+            }
+        }
+
+        /* Dynamic Flight Messages */
+        .search-msg, .location-msg {
+            position: absolute;
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            width: 90%;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .search-msg {
+            color: #ffffff;
+            top: 45%;
+        }
+
+        .location-msg {
+            color: #ff0055;
+            bottom: 35%;
+            font-size: 4.5rem;
+            letter-spacing: 1px;
+        }
+
+        .msg-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
         }
     </style>
-    <link href
+</head>
+<body>
+
+    <div class="profile-container">
+        <h1 class="heading-akash">Akash</h1>
+        <img class="profile-pic" src="223a0d34-6c4f-4f0a-93e5-6ac873289c32-1_all_148.webp" alt="Akash Kumar">
+    </div>
+
+    <div class="vehicle-overlay" id="vehicleSandbox">
+        <img id="carRunner" class="car" src="" alt="Racing Car">
+    </div>
+
+    <div class="college-section" id="collegeSection">
+        <div class="college-card">
+            <img class="college-img" src="AN_COLLEGE_IMAGE_URL" alt="A.N. College Patna">
+            <div class="college-info">
+                <h2>Anugrah Narayan College, Patna</h2>
+                <p>Currently Enrolled in This College 🎓</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flight-section" id="flightSection">
+        <img class="jet-plane" id="jetPlane" src="https://i.imgur.com/uR79W7z.png" alt="Flight">
+        <div class="search-msg" id="searchMsg">Let me search my Master's location... 🔍</div>
+        <div class="location-msg" id="locationMsg">Ohh he is currently in Prayagraj! 📍</div>
+    </div>
+
+    <script>
+        // High-Quality PNG Images transparent cutouts for execution
+        const vehicles = [
+            { src: "https://i.imgur.com/71S8Q3O.png", dir: "R2L" }, // Racing Car
+            { src: "https://i.imgur.com/f0W7ZlI.png", dir: "L2R" }, // Scorpio
+            { src: "https://i.imgur.com/5X8Xw6Y.png", dir: "R2L" }, // Fortuner
+            { src: "https://i.imgur.com/6U8Zg7w.png", dir: "L2R" }, // G-Wagon
+            { src: "https://i.imgur.com/mR8gH8z.png", dir: "R2L" }  // BMW
+        ];
+
+        const carRunner = document.getElementById('carRunner');
+        const sandbox = document.getElementById('vehicleSandbox');
+
+        // Cinematic Timeline Execution Controller
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Initial 3 seconds pause before first racing car entry
+            setTimeout(() => triggerCarSequence(0), 3000);
+        });
+
+        function triggerCarSequence(index) {
+            if (index < vehicles.length) {
+                const currentVehicle = vehicles[index];
+                carRunner.src = currentVehicle.src;
+                
+                // Clear out previous active animation styles
+                carRunner.style.animation = 'none';
+                carRunner.offsetHeight; // Force DOM Reflow layout crash mitigation
+                
+                // Apply custom drift physics animation vectors based on index direction orientation
+                if (currentVehicle.dir === "R2L") {
+                    carRunner.style.animation = "driftRightToLeft 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both";
+                } else {
+                    carRunner.style.animation = "driftLeftToRight 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both";
+                }
+
+                // 5 seconds gap system control sequence setup mechanics
+                setTimeout(() => {
+                    triggerCarSequence(index + 1);
+                }, 5000); 
+            } else {
+                // Once all cars are completed running, trigger college reveal profile setup sequence
+                setTimeout(revealANCollege, 2000);
+            }
+        }
+
+        function revealANCollege() {
+            const collegeSec = document.getElementById('collegeSection');
+            collegeSec.classList.add('reveal');
+
+            // Wait exactly 5 seconds displaying college layout details then switch to Flight scene
+            setTimeout(() => {
+                collegeSec.classList.remove('reveal');
+                setTimeout(triggerFlightCinematic, 1200);
+            }, 5000);
+        }
+
+        function triggerFlightCinematic() {
+            const flightSec = document.getElementById('flightSection');
+            const jet = document.getElementById('jetPlane');
+            const searchMsg = document.getElementById('searchMsg');
+            const locationMsg = document.getElementById('locationMsg');
+
+            flightSec.classList.add('active');
+
+            // Jet Engine smoke production particle systems configuration loop generator
+            let smokeInterval = setInterval(() => {
+                const jetRect = jet.getBoundingClientRect();
+                if(jetRect.left > 0 && jetRect.top > 0 && jetRect.top < window.innerHeight) {
+                    createSmokeParticle(jetRect.left + (jetRect.width/3), jetRect.top + (jetRect.height/1.5));
+                }
+            }, 35);
+
+            // Execute Jet Takeoff mechanics system
+            jet.style.animation = "jetTakeoff 4.5s cubic-bezier(0.42, 0, 0.58, 1) both";
+
+            // Reveal phase text configurations tracking location vectors
+            setTimeout(() => {
+                searchMsg.classList.add('msg-visible');
+            }, 1500);
+
+            setTimeout(() => {
+                searchMsg.classList.remove('msg-visible');
+                locationMsg.classList.add('msg-visible');
+                clearInterval(smokeInterval); // Terminate particle sequence loops once exited frame vectors
+            }, 4500);
+        }
+
+        function createSmokeParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.classList.add('steam-trail');
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            document.getElementById('flightSection').appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
