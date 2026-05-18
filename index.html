@@ -2,249 +2,43 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realistic Football Smash Loop ⚽💥</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CRITICAL SYSTEM FAILURE</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; overflow: hidden; }
-        body { background-color: #000; height: 100vh; width: 100vw; position: relative; }
-
-        /* --- BACKGROUND BACKGROUND VIEW --- */
-        #bg-space { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #111, #222); z-index: 1; }
-
-        /* --- SCREEN SHAKE ANIMATION CLASS --- */
-        .shake-screen { animation: screenShock 0.15s ease-in-out 2; }
-        @keyframes screenShock {
-            0% { transform: translate(0, 0); }
-            20% { transform: translate(-10px, 10px); }
-            40% { transform: translate(10px, -10px); }
-            60% { transform: translate(-10px, -5px); }
-            80% { transform: translate(10px, 5px); }
-            100% { transform: translate(0, 0); }
+        body, html {
+            margin: 0; padding: 0; overflow: hidden;
+            background: #000;
+            color: #ff0000;
+            font-family: 'Creepster', Arial, sans-serif;
+            height: 100vh;
+            touch-action: none;
+            user-select: none;
         }
-
-        /* --- FOOTBALL DESIGN & ANIMATION --- */
-        .football { 
-            width: 80px; 
-            height: 80px; 
-            background: #fff; 
-            border-radius: 50%; 
-            position: absolute; 
-            top: 50%; 
-            left: 50%;
-            margin-top: -40px;
-            margin-left: -40px;
-            z-index: 999;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.4);
-            background-image: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.4) 100%), 
-                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><polygon points="50,30 31,44 38,66 62,66 69,44" fill="black"/><polygon points="50,0 60,15 40,15" fill="black"/><polygon points="10,30 0,45 15,40" fill="black"/><polygon points="90,30 100,45 85,40" fill="black"/></svg>');
-            background-size: cover; 
-            transform: scale(0.1) rotate(0deg);
-            display: none;
+        .screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; z-index: 99999;
+            animation: flash 0.3s infinite alternate;
         }
-
-        /* Ball incoming animation from depth */
-        .ball-incoming {
-            display: block;
-            animation: incoming 0.8s cubic-bezier(0.6, 0.04, 0.98, 0.33) forwards;
+        @keyframes flash {
+            from { background: #110000; }
+            to { background: #330000; }
         }
-
-        @keyframes incoming {
-            0% { transform: scale(0.1) rotate(0deg); filter: blur(3px); opacity: 0.5; }
-            90% { filter: blur(0px); opacity: 1; }
-            100% { transform: scale(4.5) rotate(720deg); } /* Zoomed up to smash the screen */
+        .title {
+            font-size: 2.8em; margin: 10px; text-shadow: 0 0 20px red;
+            animation: shake 0.5s infinite;
         }
-
-        /* --- GLASS CRACKS CANVAS --- */
-        #crack-canvas { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 1000; 
-            pointer-events: none; 
+        .message {
+            font-size: 1.4em; max-width: 85%; line-height: 1.5;
+            text-shadow: 0 0 10px red;
         }
-
-        /* --- SHATTERED PIECES FALLING --- */
-        .glass-shard {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            pointer-events: none;
-            z-index: 1001;
-            opacity: 0.8;
-            transform-origin: center;
+        .demon {
+            font-size: 4em; margin: 20px; animation: shake 0.4s infinite;
+        }
+        button {
+            margin-top: 30px; padding: 15px 40px; font-size: 1.2em;
+            background: #000; color: #ff0000; border: 3px solid #ff0000;
+            border-radius: 0; cursor: pointer;
         }
     </style>
-</head>
-<body>
-
-    <div id="bg-space"></div>
-    <div id="ball" class="football"></div>
-    <canvas id="crack-canvas"></canvas>
-
-    <script>
-        const ball = document.getElementById('ball');
-        const canvas = document.getElementById('crack-canvas');
-        const ctx = canvas.getContext('2d');
-        const body = document.body;
-
-        // Set canvas size dynamically
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // --- INFINITE LOOP MANAGER ---
-        function startAnimationLoop() {
-            // Step 1: Reset Everything
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ball.classList.remove('ball-incoming');
-            body.classList.remove('shake-screen');
-            
-            // Remove old shards if any
-            document.querySelectorAll('.glass-shard').forEach(s => s.remove());
-
-            // Step 2: Launch Ball after a short delay
-            setTimeout(() => {
-                ball.classList.add('ball-incoming');
-            }, 500);
-
-            // Step 3: Ball hits screen exactly at 0.8s (800ms)
-            setTimeout(() => {
-                smashScreen();
-            }, 1300); // 500ms delay + 800ms animation time
-        }
-
-        // --- CRACK & SHATTER ENGINE ---
-        function smashScreen() {
-            // 1. Shake the whole screen
-            body.classList.add('shake-screen');
-
-            // 2. Render Glass Cracks
-            drawRealisticCracks();
-
-            // 3. Spawn falling glass shards
-            spawnGlassShards();
-
-            // 4. Restart Loop after 3 seconds of showing the broken screen
-            setTimeout(() => {
-                startAnimationLoop();
-            }, 3500);
-        }
-
-        function drawRealisticCracks() {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-
-            ctx.strokeStyle = 'rgba(235, 245, 255, 0.85)';
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
-
-            // Generate main sharp radial crack lines
-            const totalCracks = 30 + Math.floor(Math.random() * 10);
-            for (let i = 0; i < totalCracks; i++) {
-                ctx.lineWidth = Math.random() * 2 + 1;
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY);
-
-                let angle = (i / totalCracks) * Math.PI * 2 + (Math.random() * 0.2 - 0.1);
-                let maxDistance = Math.max(canvas.width, canvas.height);
-                
-                let segments = 5;
-                let currentX = centerX;
-                let currentY = centerY;
-
-                for (let j = 1; j <= segments; j++) {
-                    let segmentDist = (maxDistance * (j / segments)) * (0.4 + Math.random() * 0.6);
-                    let targetX = centerX + Math.cos(angle) * segmentDist + (Math.random() * 40 - 20);
-                    let targetY = centerY + Math.sin(angle) * segmentDist + (Math.random() * 40 - 20);
-                    
-                    ctx.lineTo(targetX, targetY);
-                    currentX = targetX;
-                    currentY = targetY;
-                }
-                ctx.stroke();
-            }
-
-            // Generate circular impact loops (spider web lines)
-            ctx.lineWidth = 1;
-            for (let radius = 25; radius < 250; radius += 35) {
-                ctx.beginPath();
-                for (let angle = 0; angle <= Math.PI * 2; angle += 0.25) {
-                    let jitterR = radius + (Math.random() * 12 - 6);
-                    let x = centerX + Math.cos(angle) * jitterR;
-                    let y = centerY + Math.sin(angle) * jitterR;
-                    
-                    if (angle === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.closePath();
-                ctx.stroke();
-            }
-        }
-
-        function spawnGlassShards() {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            const shardsCount = 40;
-
-            for (let i = 0; i < shardsCount; i++) {
-                const shard = document.createElement('div');
-                shard.classList.add('glass-shard');
-
-                // Generate random triangular shapes for pieces
-                let size = Math.random() * 20 + 8;
-                shard.style.width = `${size}px`;
-                shard.style.height = `${size}px`;
-                
-                // Random polygon for sharp glass look
-                shard.style.clipPath = `polygon(${Math.random()*100}% ${Math.random()*100}%, ${Math.random()*100}% ${Math.random()*100}%, ${Math.random()*100}% ${Math.random()*100}%)`;
-
-                // Start position at the center impact point
-                shard.style.left = `${centerX}px`;
-                shard.style.top = `${centerY}px`;
-
-                body.appendChild(shard);
-
-                // Physics metrics for dynamic drop
-                let angle = Math.random() * Math.PI * 2;
-                let velocity = Math.random() * 15 + 5;
-                let vx = Math.cos(angle) * velocity;
-                let vy = Math.sin(angle) * velocity - 10; // Init push up
-                let gravity = 0.6;
-                let rotation = Math.random() * 360;
-                let rotSpeed = Math.random() * 20 - 10;
-
-                let posX = centerX;
-                let posY = centerY;
-
-                // Animate shard physics loop frame by frame
-                function updateShard() {
-                    vy += gravity;
-                    posX += vx;
-                    posY += vy;
-                    rotation += rotSpeed;
-
-                    shard.style.left = `${posX}px`;
-                    shard.style.top = `${posY}px`;
-                    shard.style.transform = `rotate(${rotation}deg)`;
-
-                    // Stop updating if it falls off screen bounds
-                    if (posY < window.innerHeight + 50) {
-                        requestAnimationFrame(updateShard);
-                    } else {
-                        shard.remove();
-                    }
-                }
-                requestAnimationFrame(updateShard);
-            }
-        }
-
-        // Run Engine on load
-        startAnimationLoop();
-    </script>
-</body>
-</html>
+    <link href
